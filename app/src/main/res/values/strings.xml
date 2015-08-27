@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Fitness Team Grafik</string>
+    <string name="action_contact">Kontakt</string>
+    <string name="address">Kraków, ul. Kalwaryjska 9 do 15 \n 30-504 Kraków \n tel. 12 656 04 51
+        \n e.mail: kontakt@fitnessteam.net \n</string>
+    <string name="title_activity_contact">Kontakt</string>
+    <string name="title_activity_single_item_view">SingleItemView</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
