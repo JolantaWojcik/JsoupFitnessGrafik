@@ -163,7 +163,6 @@ public class MainActivity extends Activity {
         if (id == R.id.action_contact) {
             Intent i = new Intent(MainActivity.this, Contact.class);
             startActivity(i);
-           // return true;
         }
         return super.onOptionsItemSelected(item);
     }
