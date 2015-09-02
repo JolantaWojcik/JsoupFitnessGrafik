@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,12 +32,12 @@ public class MainActivity extends Activity {
     ListViewAdapter adapter;
     DBHandler dbHandler;
     Record record;
-    private static final String url = "http://www.fitnessteam.net/grafik_zajec.html";
+    private static final String PING_URL = "http://www.fitnessteam.net/grafik_zajec.html";
     private ProgressDialog progressDialog;
     ArrayList<HashMap<String, String>> arrayList;
-    private List<String> timeListString;
+   // private List<String> timeListString;
     private List list;
-    static String CLASSES = "class";
+    static String CLASSES = "classes";
     static String DATE = "date";
     static  String TIME = "time";
     static String INSTRUCTOR = "instructor";
@@ -53,9 +54,11 @@ public class MainActivity extends Activity {
 
         dbHandler.deleteAllRecords();
         new AddRecords().execute();
+
+        Log.d("where", "exect1");
     }
 
-    private class AddRecords extends AsyncTask<Void, Void, Void>{
+    private class AddRecords extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
@@ -65,12 +68,14 @@ public class MainActivity extends Activity {
             progressDialog.setMessage("Loading...");
             progressDialog.setIndeterminate(false);
             progressDialog.show();
+            Log.d("where", "exect2");
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
+            Log.d("where", "exect3");
             try {
-                Document doc = Jsoup.connect(url).get();
+                Document doc = Jsoup.connect(PING_URL).get();
                 for(Element table : doc.select("table[class=schedule2]")){
                     Elements content = table.select("tr");
                     Element rowDays = content.select("tr").first();
@@ -79,7 +84,7 @@ public class MainActivity extends Activity {
                     Elements columns = allClasses.select("td");
                     for(int i =1; i < columns.size(); i++){
                         Element singleClass = columns.get(i);
-                        timeListString = new ArrayList<String>();
+                        List<String> timeListString = new ArrayList<String>();
                         for(Element event : singleClass.select("div[class=inner]")){
                             Elements hour = event.getElementsByClass("czas");
                             timeListString.add(hour.text());
@@ -113,28 +118,36 @@ public class MainActivity extends Activity {
                         }
                     }
                 }
+                return true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return false;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
             list = dbHandler.getSortedRecords();
-            for(int i=0; i<list.size(); i++){
+            if(result == false || list.isEmpty()){
+                Toast.makeText(getApplicationContext(), "Przepraszamy wyst\u0105pi\u0142 problem z pobieraniem danych, " +
+                        " prosz\u0119 sprawdzi\u0107 grafik na stronie internetowej", Toast.LENGTH_LONG).show();
+            }
+            else{
+            for(int i=0; i<list.size(); i++) {
                 record = (Record) list.get(i);
                 map.put("time", record.getTime());
                 map.put("instructor", record.getInstructor());
-                map.put("class", record.getClasses());
+                map.put("classes", record.getClasses());
                 map.put("date", record.getDate());
                 arrayList.add(map);
                 listView = (ListView) findViewById(R.id.listView);
                 adapter = new ListViewAdapter(MainActivity.this, arrayList);
                 listView.setAdapter(adapter);
-                progressDialog.dismiss();
+                Log.d("where", "exect4");
             }
+            }
+            progressDialog.dismiss();
         }
     }
 
@@ -148,9 +161,9 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_contact) {
-            Intent i = new Intent(this, Contact.class);
+            Intent i = new Intent(MainActivity.this, Contact.class);
             startActivity(i);
-            return true;
+           // return true;
         }
         return super.onOptionsItemSelected(item);
     }
