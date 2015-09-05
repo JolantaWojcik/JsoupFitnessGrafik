@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Created by Jola on 25/08/2015.
  */
+@SuppressWarnings("ALL")
 public class DBHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 1;
@@ -33,7 +34,10 @@ public class DBHandler extends SQLiteOpenHelper {
     private DateFormat currentDayOfWeek = new SimpleDateFormat("EEEE");
     private String day1, day2, day3, day4, day5, day6, day7;
     private String[] days;
-    private List listOfallRecords = new LinkedList();
+    private List listOfallRecords;
+
+    //chyba nie potrzebne
+//    private static final String[] COLUMNS = { COLUMN_ID, COLUMN_TIME, COLUMN_DATE, COLUMN_CLASSES, COLUMN_INSTRUCTOR };
 
     public DBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -71,16 +75,10 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int countRows()
-    {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM TABLE_NAME", null);
-        int i = c.getCount();
-        return i;
-    }
-
     //to correct
+    @SuppressWarnings("unchecked")
     public List getSortedRecords(){
+        listOfallRecords = new LinkedList();
         day1  = currentDayOfWeek.format(dt); c.setTime(dt); c.add(Calendar.DATE, 1); dt = c.getTime();
         day2 = currentDayOfWeek.format(dt); c.add(Calendar.DATE, 1); dt = c.getTime();
         day3 = currentDayOfWeek.format(dt); c.add(Calendar.DATE, 1); dt = c.getTime();

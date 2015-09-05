@@ -8,11 +8,11 @@ public class Record {
     private int id;
     private String classes, instructor, date, time;
 
-    public Record(String classes, String instructor, String date, String time) {
+    public Record(String time, String date, String classes, String instructor) {
+        this.time = time;
+        this.date = date;
         this.classes = classes;
         this.instructor = instructor;
-        this.date = date;
-        this.time = time;
     }
 
     public Record() { }
@@ -56,4 +56,5 @@ public class Record {
     public void setDate(String date) {
         this.date = date;
     }
+
 }
