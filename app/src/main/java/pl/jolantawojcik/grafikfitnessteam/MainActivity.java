@@ -34,13 +34,13 @@ public class MainActivity extends Activity {
     Record record;
     private static final String PING_URL = "http://www.fitnessteam.net/grafik_zajec.html";
     private ProgressDialog progressDialog;
-    ArrayList<HashMap<String, String>> arrayList;
+    private ArrayList<HashMap<String, String>> arrayList;
     private List list;
     static String CLASSES = "classes";
     static String DATE = "date";
     static  String TIME = "time";
     static String INSTRUCTOR = "instructor";
-    HashMap<String, String> map = new HashMap<String, String>();
+    private HashMap<String, String> map = new HashMap<String, String>();
     private ListView listview;
 
     @Override
@@ -54,8 +54,6 @@ public class MainActivity extends Activity {
 
         dbHandler.deleteAllRecords();
         new AddRecords().execute();
-
-        Log.d("where", "exect1");
     }
 
     private class AddRecords extends AsyncTask<Void, Void, Boolean> {
@@ -68,7 +66,6 @@ public class MainActivity extends Activity {
             progressDialog.setMessage("Loading...");
             progressDialog.setIndeterminate(false);
             progressDialog.show();
-            Log.d("where", "exect2");
         }
 
         @Override
@@ -90,22 +87,22 @@ public class MainActivity extends Activity {
                         }
                         Collections.sort(timeListString, new Comparator<String>() {
                             @Override
-                            public int compare(String s, String t1) {
+                            public int compare(String hour_one, String hour_next) {
                                 try {
-                                    Matcher matcher = Pattern.compile("\\d+").matcher(s);
+                                    Matcher matcher = Pattern.compile("\\d+").matcher(hour_one);
                                     matcher.find();
                                     Integer integer1 = Integer.valueOf(matcher.group());
-                                    Matcher matcher2 = Pattern.compile("\\d+").matcher(t1);
+                                    Matcher matcher2 = Pattern.compile("\\d+").matcher(hour_next);
                                     matcher2.find();
                                     Integer integer2 = Integer.valueOf(matcher2.group());
                                     return integer1.compareTo(integer2);
                                 } catch (java.lang.NumberFormatException e) {
-                                    return s.compareTo(t1);
+                                    return hour_one.compareTo(hour_next);
                                 }
                             }
                         });
                         for (int y = 0; y < timeListString.size(); y++) {
-                            Log.d("y2", timeListString.get(y));
+                            Log.d("timeList", timeListString.get(y));
                             for (Element event : column.select("div[class=inner]")) {
                                 Elements name = event.getElementsByClass("zajecia");
                                 Elements instructor = event.getElementsByTag("a");
@@ -138,7 +135,6 @@ public class MainActivity extends Activity {
             else {
                 for (int i = 0; i < list.size(); i++) {
                     record = (Record) list.get(i);
-                    Log.d("record1", String.valueOf(record));
                     HashMap<String, String> map = new HashMap<String, String>();
                     map.put("time", record.getTime());
                     map.put("date", record.getDate());

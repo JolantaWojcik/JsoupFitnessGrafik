@@ -18,13 +18,13 @@ public class SingleItemView extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_item_view);
-        //get data
+
         Intent i = getIntent();
         className = i.getStringExtra("class");
         time = i.getStringExtra("time");
         instructor = i.getStringExtra("instructor");
         date = i.getStringExtra("date");
-        //set them to TextView
+
         tvClassName = (TextView) findViewById(R.id.classes);
         tvTime = (TextView) findViewById(R.id.time);
         tvInstructor = (TextView) findViewById(R.id.instructor);
